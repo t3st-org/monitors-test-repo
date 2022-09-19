@@ -1,49 +1,65 @@
-# Variables
-
-variable "vpc_id" {
-  type = string
+terraform {
+  required_version = ">= 0.11.0"
 }
 
-# AWS Subnets
+provider "aws" {
+  region = "${var.aws_region}"
+}
 
-resource "aws_subnet" "NewSubnet1" {
-  cidr_block = "10.0.0.0/24"
-  vpc_id = var.vpc_id
-  availability_zone = data.aws_availability_zones.all.names[0]
-  tags = {
-    Purpose: exercise
-    Name: "NewSubnet1"
+provider "aws_central" {
+  alias  = "central"
+  region = "us-east-1"
+}
+
+resource "aws_instance" "ubuntu" {
+  ami               = "${var.ami_id}"
+  instance_type     = "${var.instance_type}"
+  availability_zone = "${var.aws_region}"
+
+  tags {
+    Name = "${var.name}"
   }
 }
 
-resource "aws_subnet" "NewSubnet2" {
-  cidr_block = "10.0.1.0/24"
-  vpc_id = var.vpc_id
-  availability_zone = data.aws_availability_zones.all.names[1]
-  tags = {
-    Purpose: exercise
-    Name: "NewSubnet2"
-  }
+resource "aws_eip" "nat" {
+  vpc = true
 }
 
-resource "aws_subnet" "NewSubnet3" {
-  cidr_block = "10.0.2.0/24"
-  vpc_id = var.vpc_id
-  availability_zone = data.aws_availability_zones.all.names[2]
-  tags = {
-    Purpose: exercise
-    Name: "NewSubnet3"
-  }
+resource "aws_s3_bucket" "deepsource-bucket" {
+  acl = "public-read"       // ACL should be private
+  provider = aws.central    // Invalid region
 }
 
-# Outputs
+resource "aws_launch_configuration" "aws_launch" {
+	image_id = "ami-9876zy4w"   // Invalid AMI ID
+}
 
-output "NewSubnet1-id" {
-  value = aws_subnet.NewSubnet1.id
+resource "aws_elasticache_cluster" "redis" {
+  cluster_id           = "app"
+  engine               = "redis"
+  engine_version       = "3.2.4"
+  node_type            = "cache.m4.large"
+  num_cache_nodes      = 1
+  port                 = 6379
+  parameter_group_name = "default.redis3.2" // Default parameter group
 }
-output "NewSubnet2-id" {
-  value = aws_subnet.NewSubnet2.id
+
+resource "aws_db_instance" "default" {
+  allocated_storage    = 10
+  engine               = "mysql"
+  engine_version       = "5.6.17"
+  instance_class       = "db.m1.large"  // Previous generation instance type, see upgrade paths.
+  name                 = "db"
+  username             = "root"
+  password             = "toor"
+  db_subnet_group_name = "mysql_subnet_group"
+  parameter_group_name = "default.mysql5.6"
 }
-output "NewSubnet3-id" {
-  value = aws_subnet.NewSubnet3.id
+
+resource "aws_route" "no-route-target" {
+  route_table_id = "rtb-1234abcd"
+}
+
+output "public_dns" {
+  value = "${aws_instance.ubuntu.public_dns}"
 }

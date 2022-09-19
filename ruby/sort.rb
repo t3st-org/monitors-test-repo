@@ -1,25 +1,75 @@
-def bubble_sort(array)
-  array_length = array.length
-  return array if array_length <= 1
-  unsorted_until_index = array_length - 1
-  sorted = false
-  until sorted
-    sorted = true
-    0.upto(unsorted_until_index - 1) do |i|
-      if array[i] > array[i+1]
-        array[i], array[i+1] = array[i+1], array[i]
-        sorted = false
-      end
-    end
-    unsorted_until_index -= 1
-  end
-  return array
+# frozen_string_literal: true
+
+# Raises "bad ordering of magic comments"
+# frozen_string_literal: true
+# encoding: ascii
+
+# Raises "use of deprecated BigDecimal.new"
+a = { 'hello' => 'world', 'testing' => BigDecimal.new(123.456, 3) }
+
+# Raises "`while`/`until` detected in `begin` block"
+begin
+  do_something
+end while a == b
+
+# Raises "multiple comparison detected"
+x < y < z
+10 <= x <= 20
+
+# Raises "empty rescue block detected"
+begin
+  bar
+rescue
 end
 
-if $0 == __FILE__
-  puts 'Enter a list of numbers separated by space'
-
-  list = gets
-  bubble_sort(list)
-  print list
+# Raises "redundant `else`-clause detected"
+if bar
+else
 end
+
+# Raises "unused method arguments detected"
+def some_method(bar)
+  puts 'Hello'
+end
+
+# Raises "unreachable code detected"
+def some_method
+  return
+  do_something
+end
+
+# Raises "top level return with argument detected"
+return 1
+
+# Raises "duplicate elsif block detected"
+if x == 1
+  do_something
+elsif x == 1
+  do_something_else
+end
+
+# Raises "Deprecated way of initializing OpenSSL::Cipher and OpenSSL::Digest"
+OpenSSL::Cipher::AES.new(128, :GCM)
+
+# Raises "put empty method definitions on a single line"
+# Also raises "multiple methods with same name in the same scope" as we have a
+# method with same name above
+def some_method
+end
+
+# Raises "Invalid annotation keyword format detected"
+def foo
+  # TODO Replace this with bar
+  do_something
+end
+
+# Raises "Use `Range#cover?` instead of `Range#include?`"
+(1..9).include?(5)
+
+my_hash = {}
+# Raises "Hash merging can be replaced by hash key assignment"
+my_hash.merge!('key': value)
+
+
+# Raises "Use `size` instead of `count`"
+[1, 2, 3].count
