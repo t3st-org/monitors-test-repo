@@ -67,3 +67,19 @@ VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 # Set the default command to run when starting the container
 CMD /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main -c config_file=/etc/postgresql/9.3/main/postgresql.conf
+
+FROM ruby:2.7.2-alpine3.12
+
+ARG TZ="Asia/Shanghai"
+
+ENV TZ ${TZ}
+
+RUN apk upgrade --update \
+    && apk add bash tzdata make gcc libc-dev tar git \
+    && git clone https://github.com/jordansissel/fpm.git \
+    && (cd fpm && make install) \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && rm -rf fpm /var/cache/apk/*
+
+CMD ["/bin/bash"]
