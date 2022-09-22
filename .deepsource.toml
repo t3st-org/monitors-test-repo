@@ -21,7 +21,7 @@ enabled = false
 
 [[analyzers]]
 name = "rust"
-enabled = true
+enabled = false
 
   [analyzers.meta]
   msrv = "1.30.0"
