@@ -85,3 +85,4 @@ enabled = true
 [[analyzers]]
 name = "ansible"
 enabled = true
+
