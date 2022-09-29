@@ -86,3 +86,6 @@ enabled = false
 name = "ansible"
 enabled = false
 
+[[transformers]]
+name = "black"
+enabled = false
