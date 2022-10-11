@@ -47,7 +47,7 @@ enabled = false
 
 [[analyzers]]
 name = "javascript"
-enabled = true
+enabled = false
 
   [analyzers.meta]
   environment = ['nodejs']
@@ -66,7 +66,7 @@ enabled = false
 
 [[analyzers]]
 name = "go"
-enabled = true
+enabled = false
 
   [analyzers.meta]
   import_root = "github.com/CyberdyneHQ/monitors-test-repo"
